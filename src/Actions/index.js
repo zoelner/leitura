@@ -4,6 +4,7 @@ import {
     deletePosts,
     receivePosts,
     createPosts,
+    orderPost
 } from './Posts';
 
 import {
@@ -15,5 +16,6 @@ export {
     deletePosts,
     receivePosts,
     createPosts,
+    orderPost,
     receiveCategories
 };

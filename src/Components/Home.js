@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { HeaderView} from './HeaderView';
+import { HeaderView } from './HeaderView';
 import { FooterView } from './FooterView';
-import { Dropdown, Button, NavItem } from 'react-materialize';
+import { Dropdown, Button, NavItem, Row, Input } from 'react-materialize';
 import { Posts } from './Posts';
+import { orderPost } from '../Actions';
 
 class Home extends Component {
 
     render() {
-        const { categories, posts } = this.props;
+        const { categories, posts, sortPost } = this.props;
         return (
             <div>
                 <HeaderView />
@@ -16,7 +17,7 @@ class Home extends Component {
                     <div className="container">
                         <h1 className="header center light-blue-text lighten-1-text">App Leitura</h1>
                         <div className="row center">
-                            <h5 className="header col s12 light">Selecione a Categoria </h5>
+                            <h5 className="header col s12 light">Selecione uma Categoria </h5>
                         </div>
                         <div className="row center ">
                             <Dropdown trigger={<Button className="light-blue darken-1">Categorias</Button>}>
@@ -27,22 +28,33 @@ class Home extends Component {
                 </div>
                 <div className="container">
                     <div className="section">
-                    <h5>Posts</h5>
-                    <div className="divider"></div>
-                        <div className="row">
-                            {posts.map(post => <Posts post={post} key={post.id}/>) }
-                                </div>
-                            </div>
-                        </div>
+                        <h5>Posts</h5>
+                        <div className="divider"></div>
+                        <Row>
+                            <Input s={6} type='select' defaultValue='voteScore' label='Ordenar por:' onChange={(event) => sortPost(event.target.value)}>
+                                <option value='voteScore'>Vote Score</option>
+                                <option value='timestamp'>Data de Criação</option>
+                                <option value='title'>Título</option>
+                            </Input>
+                        </Row>
+                        <Row>
+                            {posts.map(post => <Posts post={post} key={post.id} />)}
+                        </Row>
+                    </div>
+                </div>
                 <FooterView />
             </div>
         )
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     categories: state.categories,
     posts: state.posts
 })
 
-export default connect(mapStateToProps)(Home);
+const mapDispatchToProps = dispatch => ({
+    sortPost: (sort) => dispatch(orderPost(sort))
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(Home);

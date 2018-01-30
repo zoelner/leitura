@@ -1,4 +1,5 @@
-import { RECEIVE_POSTS, DELETE_POSTS, CREATE_POSTS } from "../Actions/ActionTypes";
+import { RECEIVE_POSTS, DELETE_POSTS, CREATE_POSTS, SORT_POST } from "../Actions/ActionTypes";
+import sortBy from 'sort-by';
 
 export function posts(state = [], action) {
 
@@ -22,6 +23,8 @@ export function posts(state = [], action) {
                     commentCount,
                 }
             ]
+        case SORT_POST:
+            return [...state.sort(sortBy(action.sort))]
         default:
             return state;
     }

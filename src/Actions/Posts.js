@@ -1,13 +1,21 @@
 import {
     RECEIVE_POSTS,
     DELETE_POSTS,
-    CREATE_POSTS
+    CREATE_POSTS,
+    SORT_POST
 } from "./ActionTypes";
 
 export function receivePosts(posts) {
     return {
         type: RECEIVE_POSTS,
         posts
+    }
+}
+
+export function orderPost(sort) {
+    return {
+        type: SORT_POST,
+        sort
     }
 }
 
