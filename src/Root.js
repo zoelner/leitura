@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom'
-import { Home, Categories } from './Components';
+import { Home } from './Components';
 import { receiveData } from './Util';
 import { connect } from 'react-redux';
+import { FormPost } from './Components/Posts/';
 
 class Root extends Component {
 
@@ -17,7 +18,8 @@ class Root extends Component {
       <BrowserRouter>
         <div>
           <Route exact path="/" component={Home} />
-          <Route path="/categories" component={Categories} />
+          <Route exact path="/posts" component={FormPost} />
+          <Route path="/posts/:id" component={FormPost} />
           <Route path="/:category/posts" render={() => 'Work'} />
         </div>
       </BrowserRouter>

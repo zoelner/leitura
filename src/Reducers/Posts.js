@@ -7,7 +7,7 @@ export function posts(state = [], action) {
         case RECEIVE_POSTS:
             return action.posts
         case DELETE_POSTS:
-            return state.map(todo => (todo.id === action.id) ? { ...todo, deleted: 'true' } : todo)
+            return state.map(post => (post.id === action.id) ? { ...post, deleted: 'true' } : post)
         case CREATE_POSTS:
             const { id, timestamp, body, author, category, voteScore, deleted, commentCount } = action;
             return [
@@ -24,7 +24,7 @@ export function posts(state = [], action) {
                 }
             ]
         case SORT_POST:
-            return [...state.sort(sortBy(action.sort))]
+            return (action.sort === 'voteScore') ? [...state.sort(sortBy(`${action.sort}`))] : [...state.sort(sortBy(action.sort))]
         default:
             return state;
     }

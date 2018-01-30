@@ -26,16 +26,9 @@ export function deletePosts(id) {
     }
 }
 
-export function createPosts(title, body, author, category) {
+export function createPosts(posts) {
     return {
         type: CREATE_POSTS,
-        id: Math.random().toString(36).substring(2),
-        timestamp: Date.now(),
-        title,
-        body,
-        author,
-        category,
-        voteScore: 1,
-        deleted: false,
+        posts,
     }
 }
