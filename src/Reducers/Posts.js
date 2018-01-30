@@ -6,7 +6,7 @@ export function posts(state = [], action) {
         case RECEIVE_POSTS:
             return action.posts
         case DELETE_POSTS:
-            return state.map(todo => (todo.id === action.id) ? { ...todo, deleted: 'true' } : todo)
+            return state.map(post => (post.id === action.id) ? { ...post, deleted: 'true' } : post)
         case CREATE_POSTS:
             const { id, timestamp, body, author, category, voteScore, deleted, commentCount } = action;
             return [
