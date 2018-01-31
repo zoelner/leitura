@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import FormPost from './FormPost';
+import { Button } from 'react-materialize';
+
 
 const Posts = (props) => {
     const { title, body, author, category, voteScore } = props.post;
@@ -8,6 +11,9 @@ const Posts = (props) => {
             <div className="card light-blue">
                 <div className="card-content white-text">
                     <span className="card-title">{title}</span>
+
+                    <FormPost trigger={<Button className="btn-floating halfway-fab waves-effect waves-light  orange"><i className="material-icons right">mode_edit</i></Button>}/>
+
                     <div className="row">
                         <p className="col s6">Autor: {author}</p>
                         <p className="col s6">Categoria: {category}</p>
@@ -19,7 +25,7 @@ const Posts = (props) => {
                     <Link to="/" className="badge white-text">Votar
                         <span className="white-text">{voteScore}</span>
                         </Link>
-                    <Link to="/" className="white-text">Comentar</Link>
+                    <Link to="/" className="white-text">Ver Mais</Link>
                 </div>
             </div>
         </div>
