@@ -2,14 +2,28 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { HeaderView } from './HeaderView';
 import { FooterView } from './FooterView';
-import { Posts} from './Posts';
+import { Posts, FormPost } from './Posts';
 import { orderPost } from '../Actions';
-import { Dropdown, Button, NavItem, Input } from 'react-materialize';
+import { Dropdown, Button, Input } from 'react-materialize';
+import { Link } from 'react-router-dom';
 
 class Home extends Component {
 
+    filter() {
+        const { match, posts } = this.props;
+        if (match.params.name) {
+            return posts
+                .filter(post => match.params.name === post.category)
+                .map((post, index) => <Posts s={6} m={6} post={post} key={index} />)
+        }
+        else {
+            return posts
+                .map((post, index) => <Posts s={6} m={6} post={post} key={index} />)
+        }
+    }
+
     render() {
-        const { categories, posts, sortPost } = this.props;
+        const { categories, sortPost } = this.props;
         return (
             <div>
                 <HeaderView />
@@ -21,7 +35,7 @@ class Home extends Component {
                         </div>
                         <div className="row center ">
                             <Dropdown trigger={<Button className="light-blue darken-1" waves='light'>Categorias</Button>}>
-                                {categories.map((category) => <NavItem key={category.name} href={category.path}>{category.name.toUpperCase()}</NavItem>)}
+                                {categories.map((category) => <li key={category.name}><Link to={`/category\/${category.path}`}>{category.name.toUpperCase()}</Link></li>)}
                             </Dropdown>
                         </div>
                     </div>
@@ -40,12 +54,12 @@ class Home extends Component {
                                 </Input>
                             </div>
                             <div className="col s12 m6">
-                            <Button className="light-blue darken-1 btn pulse" node='a' href="/posts" waves='light'>Adicionar Post</Button>
+                                <FormPost trigger={<Button className="light-blue darken-1" waves='light'>Adicionar Post</Button>}/>
                             </div>
 
                         </div>
                         <div className="row">
-                            {posts.map( (post, index) => <Posts s={6} m={6} post={post} key={index} />)}
+                            {this.filter()}
 
                         </div>
                     </div>

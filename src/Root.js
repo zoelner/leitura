@@ -18,9 +18,8 @@ class Root extends Component {
       <BrowserRouter>
         <div>
           <Route exact path="/" component={Home} />
-          <Route exact path="/posts" component={FormPost} />
+          <Route path="/category/:name" component={Home} />
           <Route path="/posts/:id" component={FormPost} />
-          <Route path="/:category/posts" render={() => 'Work'} />
         </div>
       </BrowserRouter>
     )
