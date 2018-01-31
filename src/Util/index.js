@@ -18,20 +18,20 @@ export function receiveData(url) {
 
 export function postData(url, data) {
     return async dispatch => {
-        const body = Object.assign({}, data, { id: Math.random().toString(36).substring(2) , timestamp: Date.now()})
-        await fetch(`http://localhost:3001/${url}`,{
+        let response = await fetch(`http://localhost:3001/${url}`,{
             method: "POST",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': 'Zoelner'
             },
-            body: JSON.stringify(body)
+            body: JSON.stringify(Object.assign({}, data, { id: Math.random().toString(36).substring(2) , timestamp: Date.now()}))
         })
 
+        let posts = await response.json()
         switch (url) {
             case 'posts':
-                return await dispatch(createPosts(body))
+                return await dispatch(createPosts(await posts))
             default:
                 break;
         }

@@ -16,6 +16,8 @@ class FormPost extends Component {
         e.preventDefault()
         const data = serializeForm(e.target, { hash: true })
         this.props.addPost('posts', data)
+        alert('Post criado com sucesso!');
+        this.props.history.push("/");
     }
     render() {
 
@@ -30,7 +32,7 @@ class FormPost extends Component {
                         <textarea  name="body" className="materialize-textarea"></textarea>
 
                         <div className="col s6 m6">
-                            <Button className="light-blue darken-1 btn pulse" waves='light' type="submit"  onClick={() => this.props.history.push("/")}>Enviar</Button>
+                            <Button className="light-blue darken-1 btn pulse" waves='light' type="submit">Enviar</Button>
                         </div>
                     </form>
                 </div>

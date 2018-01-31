@@ -9,19 +9,9 @@ export function posts(state = [], action) {
         case DELETE_POSTS:
             return state.map(post => (post.id === action.id) ? { ...post, deleted: 'true' } : post)
         case CREATE_POSTS:
-            const { id, timestamp, body, author, category, voteScore, deleted, commentCount } = action;
             return [
                 ...state,
-                {
-                    id,
-                    timestamp,
-                    body,
-                    author,
-                    category,
-                    voteScore,
-                    deleted,
-                    commentCount,
-                }
+                action.posts
             ]
         case SORT_POST:
             return (action.sort === 'voteScore') ? [...state.sort(sortBy(`${action.sort}`))] : [...state.sort(sortBy(action.sort))]
