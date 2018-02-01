@@ -1,4 +1,4 @@
 import { Posts } from './Posts'
-import FormPost from './FormPost'
+import SavePost from './SavePost'
 
-export { Posts, FormPost};
+export { Posts, SavePost };

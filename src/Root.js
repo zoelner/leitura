@@ -3,7 +3,7 @@ import { BrowserRouter, Route } from 'react-router-dom'
 import { Home } from './Components';
 import { receiveData } from './Util';
 import { connect } from 'react-redux';
-import { FormPost } from './Components/Posts/';
+import { SavePost } from './Components/Posts/';
 
 class Root extends Component {
 
@@ -19,7 +19,7 @@ class Root extends Component {
         <div>
           <Route exact path="/" component={Home} />
           <Route path="/category/:name" component={Home} />
-          <Route path="/posts/:id" component={FormPost} />
+          <Route path="/posts/:id" component={SavePost} />
         </div>
       </BrowserRouter>
     )

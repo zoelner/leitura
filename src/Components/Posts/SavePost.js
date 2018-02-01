@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { postData } from '../../Util';
 
 
-class FormPost extends Component {
+class SavePost extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault()
@@ -15,17 +15,16 @@ class FormPost extends Component {
         this.props.history.push("/");
     }
     render() {
-
         return (
             <div>
                 <Modal
-                    header={ this.props.match  && (this.props.match.params.id !== undefined ) ? 'Editar Post' : 'Adicionar Post'}
+                    header='Adicionar Post'
                     fixedFooter
                     trigger={this.props.trigger}
                     actions={[<Button className="modal-action modal-close waves-effect waves-red btn-flat" waves='light'>Fechar</Button>]}>
                     <div className="row">
                         <form onSubmit={this.handleSubmit}>
-                            <Input s={6} name="author" label="Usuário" defaultValue={this.props.match  && this.props.match.params.id} required />
+                            <Input s={6} name="author" label="Usuário" required />
                             <Input s={6} name="category" type='select' label="Categoria">
                                 {this.props.categories.map((category) => <option key={category.name} value={category.name}>{category.name.toUpperCase()}</option>)}
                             </Input>
@@ -44,13 +43,13 @@ class FormPost extends Component {
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, props) => ({
     categories: state.categories,
-    posts: state.posts,
+    post: state.posts
 })
 
 const mapDispatchToProps = dispatch => ({
     addPost: (post, data) => dispatch(postData(post, data))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(FormPost);
+export default connect(mapStateToProps, mapDispatchToProps)(SavePost);
