@@ -6,8 +6,15 @@ import { Posts, SavePost } from './Posts';
 import { orderPost } from '../Actions';
 import { Dropdown, Button, Input } from 'react-materialize';
 import { Link } from 'react-router-dom';
+import { receiveData } from './../Util/index';
 
 class Home extends Component {
+
+    async componentDidMount() {
+        const { fetchData } = this.props;
+        await fetchData('posts')
+        await fetchData('categories')
+      }
 
     filter() {
         const { match, posts } = this.props;
@@ -76,7 +83,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    sortPost: (sort) => dispatch(orderPost(sort))
+    sortPost: (sort) => dispatch(orderPost(sort)),
+    fetchData: (url) => dispatch(receiveData(url))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

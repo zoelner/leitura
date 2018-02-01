@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom'
 import { Home } from './Components';
-import { receiveData } from './Util';
 import { connect } from 'react-redux';
-import { SavePost } from './Components/Posts/';
+import { EditPost } from './Components/Posts/';
 
 class Root extends Component {
 
-  async componentDidMount() {
-    const { fetchData } = this.props;
-    await fetchData('posts')
-    await fetchData('categories')
-  }
+
 
   render() {
     return (
@@ -19,19 +14,15 @@ class Root extends Component {
         <div>
           <Route exact path="/" component={Home} />
           <Route path="/category/:name" component={Home} />
-          <Route path="/posts/:id" component={SavePost} />
+          <Route path="/post/edit/:id" component={EditPost} />
         </div>
       </BrowserRouter>
     )
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    fetchData: (url) => dispatch(receiveData(url))
-  };
-};
 
 
 
-export default connect(null, mapDispatchToProps)(Root);
+
+export default connect()(Root);
