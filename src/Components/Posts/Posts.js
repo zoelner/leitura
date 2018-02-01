@@ -1,17 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from 'react-materialize';
-
 
 const Posts = (props) => {
-    const { title, body, author, category, voteScore } = props.post;
+    const { id, title, body, author, category, voteScore } = props.post;
     return (
         <div className="col s12 m6" >
             <div className="card light-blue">
                 <div className="card-content white-text">
                     <span className="card-title">{title}</span>
 
-                    <Button className="btn-floating halfway-fab waves-effect waves-light  orange"><i className="material-icons right">mode_edit</i></Button>
+                    <Link to={`/post/edit/${id}`} className="btn-floating halfway-fab waves-effect waves-light  orange"><i className="material-icons right">mode_edit</i></Link>
 
                     <div className="row">
                         <p className="col s6">Autor: {author}</p>

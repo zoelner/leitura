@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom'
 import { Home } from './Components';
 import { connect } from 'react-redux';
-import { EditPost } from './Components/Posts/';
+import { FormPost } from './Components/Posts/';
 
 class Root extends Component {
 
@@ -10,11 +10,12 @@ class Root extends Component {
 
   render() {
     return (
-      <BrowserRouter>
+      <BrowserRouter >
         <div>
-          <Route exact path="/" component={Home} />
+          <Route path="/post/edit/:id" component={FormPost} />
+          <Route path="/post/new" component={FormPost} />
           <Route path="/category/:name" component={Home} />
-          <Route path="/post/edit/:id" component={EditPost} />
+          <Route exact path="/" component={Home} />
         </div>
       </BrowserRouter>
     )

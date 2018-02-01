@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { HeaderView } from './HeaderView';
 import { FooterView } from './FooterView';
-import { Posts, SavePost } from './Posts';
+import { Posts } from './Posts';
 import { orderPost } from '../Actions';
 import { Dropdown, Button, Input } from 'react-materialize';
 import { Link } from 'react-router-dom';
@@ -61,7 +61,7 @@ class Home extends Component {
                                 </Input>
                             </div>
                             <div className="col s12 m6">
-                                <SavePost trigger={<Button className="light-blue darken-1" waves='light'>Adicionar Post</Button>}/>
+                            <Link to="/post/new" className="light-blue darken-1 btn waves-light">Adicionar Post</Link>
                             </div>
 
                         </div>
