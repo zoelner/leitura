@@ -6,7 +6,7 @@ import { Posts } from './Posts';
 import { orderPost } from '../Actions';
 import { Dropdown, Button, Input } from 'react-materialize';
 import { Link } from 'react-router-dom';
-import { receiveData } from './../Util/index';
+import { receiveData } from './../Util';
 
 class Home extends Component {
 
@@ -14,23 +14,10 @@ class Home extends Component {
         const { fetchData } = this.props;
         await fetchData('posts')
         await fetchData('categories')
-      }
-
-    filter() {
-        const { match, posts } = this.props;
-        if (match.params.name) {
-            return posts
-                .filter(post => match.params.name === post.category)
-                .map((post, index) => <Posts s={6} m={6} post={post} key={index} />)
-        }
-        else {
-            return posts
-                .map((post, index) => <Posts s={6} m={6} post={post} key={index} />)
-        }
     }
 
     render() {
-        const { categories, sortPost } = this.props;
+        const { categories, sortPost, posts, match } = this.props;
         return (
             <div>
                 <HeaderView />
@@ -61,13 +48,19 @@ class Home extends Component {
                                 </Input>
                             </div>
                             <div className="col s12 m6">
-                            <Link to="/post/new" className="light-blue darken-1 btn waves-light">Adicionar Post</Link>
+                                <Link to="/post/new" className="light-blue darken-1 btn waves-light">Adicionar Post</Link>
                             </div>
 
                         </div>
                         <div className="row">
-                            {this.filter()}
-
+                            {posts
+                                .filter(post => !post.deleted)
+                                .filter(post => {
+                                    if (match.params.name) {
+                                        return match.params.name === post.category
+                                    } else { return true }
+                                })
+                                .map((post, index) => <Posts s={6} m={6} post={post} key={index} />)}
                         </div>
                     </div>
                 </div>

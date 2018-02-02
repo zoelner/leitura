@@ -2,7 +2,7 @@ import {
     RECEIVE_POSTS,
     DELETE_POSTS,
     CREATE_POSTS,
-    SORT_POST
+    SORT_POST,
 } from "./ActionTypes";
 
 export function receivePosts(posts) {

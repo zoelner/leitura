@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Input } from 'react-materialize';
 import serializeForm from 'form-serialize';
 import { connect } from 'react-redux';
-import { postData } from '../../Util';
+import { postData, updatePost } from '../../Util';
 import { HeaderView } from '../HeaderView';
 import { FooterView } from '../FooterView';
 
@@ -10,16 +10,24 @@ import { FooterView } from '../FooterView';
 class FormPost extends Component {
 
 
-    handleSubmit = (e) => {
+    insertPost = (e) => {
         e.preventDefault()
         const data = serializeForm(e.target, { hash: true })
-        this.props.addPost('posts', data)
+        this.props.addPost(data)
         alert('Post criado com sucesso!');
         this.props.history.push("/")
     }
 
+    updatePost = (e) => {
+        e.preventDefault()
+        const data = serializeForm(e.target, { hash: true })
+        this.props.editPost(data, this.props.match.params.id)
+        alert('Post alterado com sucesso!');
+        this.props.history.push("/")
+    }
+
     createPost = () => (
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.insertPost}>
             <Input s={6} name="author" label="Usuário" required />
             <Input s={6} name="category" type='select' label="Categoria">
                 {this.props.categories.map((category) => <option key={category.name} value={category.name}>{category.name.toUpperCase()}</option>)}
@@ -35,7 +43,8 @@ class FormPost extends Component {
     )
 
     editPost = () => (
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.updatePost}>
+        <input type="hidden" name="id" value={this.props.post.id} />
             <Input s={6} name="author" label="Usuário" defaultValue={this.props.post.author} required />
             <Input s={6} name="category" type='select' label="Categoria" defaultValue={this.props.post.category}>
                 {this.props.categories.map((category) => <option key={category.name} value={category.name}>{category.name.toUpperCase()}</option>)}
@@ -76,8 +85,9 @@ const mapStateToProps = (state, props) => ({
     post: state.posts.find(post => post.id === props.match.params.id)
 })
 
-const mapDispatchToProps = dispatch => ({
-    addPost: (post, data) => dispatch(postData(post, data))
+const mapDispatchToProps = (dispatch) => ({
+    addPost: (data) => dispatch(postData(data)),
+    editPost: (data, id) => dispatch(updatePost(data, id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormPost);
