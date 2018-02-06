@@ -1,4 +1,4 @@
-import { receivePosts, receiveCategories, createPosts, votePost, receiveComments } from "../Actions";
+import { receivePosts, receiveCategories, createPosts, votePost, receiveComments, deletePosts } from "../Actions";
 import uuid from 'uuid'
 
 export function receiveData(url) {
@@ -45,6 +45,16 @@ export function updatePost(data, id) {
         })
     }
 }
+
+export function removePost( id) {
+    return async dispatch => {
+        await fetch(`http://localhost:3001/posts/${id}`, {
+            method: "DELETE", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },
+        })
+        dispatch(deletePosts(await id))
+    }
+}
+
 
 export function postVote(id, vote) {
     return async dispatch => {

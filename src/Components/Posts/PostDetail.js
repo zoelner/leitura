@@ -33,7 +33,7 @@ class PostDetail extends Component {
                                 {post.body} <br />
                             </div>
                             <div className="row"></div>
-                            <h5>Comentários</h5>
+                            <h5>Comentários | {comments.length}</h5>
                             <div className="row divider"></div>
                             <Collapsible>
                                 {comments.map(comment =>

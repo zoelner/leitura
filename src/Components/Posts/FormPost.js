@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { postData, updatePost } from '../../Util';
 import { HeaderView } from '../HeaderView';
 import { FooterView } from '../FooterView';
+import { removePost } from './../../Util';
 
 
 class FormPost extends Component {
@@ -44,7 +45,7 @@ class FormPost extends Component {
 
     editPost = () => (
         <form onSubmit={this.updatePost}>
-        <input type="hidden" name="id" value={this.props.post.id} />
+            <input type="hidden" name="id" value={this.props.post.id} />
             <Input s={6} name="author" label="Usuário" defaultValue={this.props.post.author} required />
             <Input s={6} name="category" type='select' label="Categoria" defaultValue={this.props.post.category}>
                 {this.props.categories.map((category) => <option key={category.name} value={category.name}>{category.name.toUpperCase()}</option>)}
@@ -53,24 +54,28 @@ class FormPost extends Component {
             <textarea name="body" className="materialize-textarea" defaultValue={this.props.post.body}></textarea>
             <div className="col s6 m6">
                 <Button
-                    className="light-blue darken-1 btn pulse modal-close" waves='light' type="submit"
+                    className="green darken-1 btn pulse modal-close" waves='light' type="submit"
                 >Salvar</Button>
+                <Button
+                    className="red btn pulse modal-close" waves='light'
+                    onClick={() =>  this.props.delPost(this.props.post.id)}
+                >Apagar</Button>
             </div>
         </form>
     )
 
 
     render() {
-        let {post} = this.props;
+        let { post } = this.props;
         return (
             <div>
                 <HeaderView />
                 <div className="container">
-                    <h1 className="header center light-blue-text lighten-1-text">{ (post === undefined) ? 'Novo Post' : 'Editar Post'   }</h1>
+                    <h1 className="header center light-blue-text lighten-1-text">{(post === undefined) ? 'Novo Post' : 'Editar Post'}</h1>
                     <h5>Posts</h5>
                     <div className="row divider"></div>
                     <div className="row">
-                        { (post === undefined) ? this.createPost() : this.editPost()   }
+                        {(post === undefined) ? this.createPost() : this.editPost()}
                     </div>
                 </div>
                 <FooterView />
@@ -87,7 +92,8 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     addPost: (data) => dispatch(postData(data)),
-    editPost: (data, id) => dispatch(updatePost(data, id))
+    editPost: (data, id) => dispatch(updatePost(data, id)),
+    delPost: (id) => dispatch(removePost(id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormPost);
