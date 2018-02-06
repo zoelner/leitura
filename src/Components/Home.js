@@ -48,7 +48,7 @@ class Home extends Component {
                                 </Input>
                             </div>
                             <div className="col s12 m6">
-                                <Link to="/post/new" className="light-blue darken-1 btn waves-light">Adicionar Post</Link>
+                                <Link to="/new" className="light-blue darken-1 btn waves-light">Adicionar Post</Link>
                             </div>
 
                         </div>

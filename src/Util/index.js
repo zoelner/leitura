@@ -1,4 +1,4 @@
-import { receivePosts, receiveCategories, createPosts, votePost } from "../Actions";
+import { receivePosts, receiveCategories, createPosts, votePost, receiveComments } from "../Actions";
 import uuid from 'uuid'
 
 export function receiveData(url) {
@@ -15,6 +15,16 @@ export function receiveData(url) {
         }
     }
 }
+
+export function receiveDataComments(id) {
+    return async (dispatch) => {
+        const data = await fetch(`http://localhost:3001/posts/${id}/comments`, { headers: { 'Authorization': 'Zoelner' } })
+        const response = await data.json();
+
+        return dispatch(receiveComments(response))
+    }
+}
+
 
 export function postData(data) {
     return async dispatch => {
