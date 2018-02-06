@@ -3,6 +3,7 @@ export const DELETE_POSTS = 'DELETE_POSTS';
 export const CREATE_POSTS = 'CREATE_POSTS';
 export const EDIT_POST = 'EDIT_POST';
 export const SORT_POST = 'SORT_POST';
+export const VOTE_POST = 'VOTE_POST';
 
 
 export const RECEIVE_COMMENTS = 'RECEIVE_COMMENTS';

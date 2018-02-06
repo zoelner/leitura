@@ -3,6 +3,7 @@ import {
     DELETE_POSTS,
     CREATE_POSTS,
     SORT_POST,
+    VOTE_POST,
 } from "./ActionTypes";
 
 export function receivePosts(posts) {
@@ -30,5 +31,12 @@ export function createPosts(posts) {
     return {
         type: CREATE_POSTS,
         posts,
+    }
+}
+
+export function votePost(post) {
+    return {
+        type: VOTE_POST,
+        post
     }
 }

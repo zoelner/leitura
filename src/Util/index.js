@@ -1,4 +1,5 @@
-import { receivePosts, receiveCategories, createPosts } from "../Actions";
+import { receivePosts, receiveCategories, createPosts, votePost } from "../Actions";
+import uuid from 'uuid'
 
 export function receiveData(url) {
     return async (dispatch) => {
@@ -19,7 +20,7 @@ export function postData(data) {
     return async dispatch => {
         let response = await fetch(`http://localhost:3001/posts`, {
             method: "POST", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },
-            body: JSON.stringify(Object.assign({}, data, { id: Math.random().toString(36).substring(2), timestamp: Date.now() }))
+            body: JSON.stringify(Object.assign({}, data, { id: uuid(), timestamp: Date.now() }))
         })
         let posts = await response.json()
         return await dispatch(createPosts(await posts))
@@ -28,9 +29,20 @@ export function postData(data) {
 
 export function updatePost(data, id) {
     return async dispatch => {
-    await fetch(`http://localhost:3001/posts/${id}`, {
+        await fetch(`http://localhost:3001/posts/${id}`, {
             method: "PUT", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },
             body: JSON.stringify(data)
         })
+    }
+}
+
+export function postVote(id, vote) {
+    return async dispatch => {
+        let response = await fetch(`http://localhost:3001/posts/${id}`, {
+            method: "POST", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },
+            body: (vote) ? '{"option":"upVote"}' : '{"option":"downVote"}'
+        })
+        let posts = await response.json()
+        return await dispatch(votePost(await posts))
     }
 }

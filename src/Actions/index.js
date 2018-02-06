@@ -1,5 +1,6 @@
 
 import {
+    votePost,
     receiveData,
     deletePosts,
     receivePosts,
@@ -12,6 +13,7 @@ import {
 } from './Categories'
 
 export {
+    votePost,
     receiveData,
     deletePosts,
     receivePosts,

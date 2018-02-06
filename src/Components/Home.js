@@ -6,7 +6,7 @@ import { Posts } from './Posts';
 import { orderPost } from '../Actions';
 import { Dropdown, Button, Input } from 'react-materialize';
 import { Link } from 'react-router-dom';
-import { receiveData } from './../Util';
+import { receiveData, postVote } from './../Util';
 
 class Home extends Component {
 
@@ -17,7 +17,7 @@ class Home extends Component {
     }
 
     render() {
-        const { categories, sortPost, posts, match } = this.props;
+        const { categories, sortPost, posts, match, votePost } = this.props;
         return (
             <div>
                 <HeaderView />
@@ -29,7 +29,7 @@ class Home extends Component {
                         </div>
                         <div className="row center ">
                             <Dropdown trigger={<Button className="light-blue darken-1" waves='light'>Categorias</Button>}>
-                                {categories.map((category) => <li key={category.name}><Link to={`/category\/${category.path}`}>{category.name.toUpperCase()}</Link></li>)}
+                                {categories.map((category) => <li key={category.name}><Link to={`/category/${category.path}`}>{category.name.toUpperCase()}</Link></li>)}
                             </Dropdown>
                         </div>
                     </div>
@@ -60,7 +60,7 @@ class Home extends Component {
                                         return match.params.name === post.category
                                     } else { return true }
                                 })
-                                .map((post, index) => <Posts s={6} m={6} post={post} key={index} />)}
+                                .map((post, index) => <Posts s={6} m={6} post={post} key={index} vote={votePost}/>)}
                         </div>
                     </div>
                 </div>
@@ -77,7 +77,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     sortPost: (sort) => dispatch(orderPost(sort)),
-    fetchData: (url) => dispatch(receiveData(url))
+    fetchData: (url) => dispatch(receiveData(url)),
+    votePost: (id, vote) => dispatch(postVote(id,vote))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
