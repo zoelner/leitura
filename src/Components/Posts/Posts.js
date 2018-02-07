@@ -3,6 +3,12 @@ import { Link } from 'react-router-dom';
 
 class Posts extends Component {
 
+    async componentDidMount() {
+        const { post, receiveComments } = this.props;
+        const {id} = post;
+        await receiveComments(id)
+    }
+
     state = {
         vote: true
     }
@@ -30,14 +36,16 @@ class Posts extends Component {
                     </div>
                     <div className="card-action white-text light-blue darken-1">
 
-                        <Link to="" onClick={() => this.vote(id)} className="badge white-text">Votar |
-                        <span className="white-text"> {voteScore}</span>
+                        <Link to="" onClick={() => this.vote(id)} className="badge white-text">Votar
+                        <span className="white-text"> | {voteScore}</span>
                         </Link>
-                        <Link to={`/post/${id}`} className="white-text">Ver Mais</Link>
+                        <Link to={`/${category}/${id}`} className="white-text">Comentários<span className="white-text"> | {this.props.comments.length}</span></Link>
+                        <Link to={`/${category}/${id}`} className="white-text">Ver Mais</Link>
                     </div>
                 </div>
             </div>
         )
     }
 }
+
 export { Posts };

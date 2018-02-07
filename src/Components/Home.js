@@ -6,7 +6,7 @@ import { Posts } from './Posts';
 import { orderPost } from '../Actions';
 import { Dropdown, Button, Input } from 'react-materialize';
 import { Link } from 'react-router-dom';
-import { receiveData, postVote } from './../Util';
+import { receiveData, postVote, receiveDataComments } from './../Util';
 
 class Home extends Component {
 
@@ -17,7 +17,7 @@ class Home extends Component {
     }
 
     render() {
-        const { categories, sortPost, posts, match, votePost } = this.props;
+        const { categories, sortPost, posts, match, votePost, receiveComments, comments } = this.props;
         return (
             <div>
                 <HeaderView />
@@ -29,7 +29,7 @@ class Home extends Component {
                         </div>
                         <div className="row center ">
                             <Dropdown trigger={<Button className="light-blue darken-1" waves='light'>Categorias</Button>}>
-                                {categories.map((category) => <li key={category.name}><Link to={`/category/${category.path}`}>{category.name.toUpperCase()}</Link></li>)}
+                                {categories.map((category) => <li key={category.name}><Link to={`/${category.path}/`}>{category.name.toUpperCase()}</Link></li>)}
                             </Dropdown>
                         </div>
                     </div>
@@ -60,7 +60,15 @@ class Home extends Component {
                                         return match.params.name === post.category
                                     } else { return true }
                                 })
-                                .map((post, index) => <Posts s={6} m={6} post={post} key={index} vote={votePost}/>)}
+                                .map((post, index) => (
+                                    <Posts s={6} m={6}
+                                        post={post}
+                                        key={index}
+                                        vote={votePost}
+                                        receiveComments={receiveComments}
+                                        comments={comments.filter(comment => comment.parentId === post.id)}
+                                        />
+                                        ))}
                         </div>
                     </div>
                 </div>
@@ -72,13 +80,15 @@ class Home extends Component {
 
 const mapStateToProps = state => ({
     categories: state.categories,
-    posts: state.posts
+    posts: state.posts,
+    comments: state.comments
 })
 
 const mapDispatchToProps = dispatch => ({
     sortPost: (sort) => dispatch(orderPost(sort)),
     fetchData: (url) => dispatch(receiveData(url)),
-    votePost: (id, vote) => dispatch(postVote(id,vote))
+    votePost: (id, vote) => dispatch(postVote(id, vote)),
+    receiveComments: (id) => dispatch(receiveDataComments(id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
