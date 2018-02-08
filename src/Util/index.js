@@ -1,4 +1,4 @@
-import { receivePosts, receiveCategories, createPosts, votePost, receiveComments, deletePosts } from "../Actions";
+import { receivePosts, receiveCategories, createPosts, votePost, receiveComments, deletePosts, addComment } from "../Actions";
 import uuid from 'uuid'
 
 export function receiveData(url) {
@@ -16,12 +16,25 @@ export function receiveData(url) {
     }
 }
 
+
 export function receiveDataComments(id) {
     return async (dispatch) => {
         const data = await fetch(`http://localhost:3001/posts/${id}/comments`, { headers: { 'Authorization': 'Zoelner' } })
         const response = await data.json();
 
         return dispatch(receiveComments(response))
+    }
+}
+
+
+export function createComment(data, parentId) {
+    return async dispatch => {
+        let response = await fetch(`http://localhost:3001/comments`, {
+            method: "POST", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },
+            body: JSON.stringify(Object.assign({}, { parentId }, data, { id: uuid(), timestamp: Date.now() }))
+        })
+        let comment = await response.json()
+        return await dispatch(addComment(await comment))
     }
 }
 
@@ -46,7 +59,7 @@ export function updatePost(data, id) {
     }
 }
 
-export function removePost( id) {
+export function removePost(id) {
     return async dispatch => {
         await fetch(`http://localhost:3001/posts/${id}`, {
             method: "DELETE", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },

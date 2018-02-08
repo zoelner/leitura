@@ -5,14 +5,19 @@ import { HeaderView } from '../HeaderView';
 import Timestamp from 'react-timestamp';
 import { Collapsible } from 'react-materialize';
 import CollapsibleItem from 'react-materialize/lib/CollapsibleItem';
-import { receiveDataComments } from '../../Util';
+import { createComment } from './../../Util';
 
 
 class PostDetail extends Component {
-    async componentDidMount() {
-        const { fetchData, post } = this.props;
-        const { id } = post;
-        await fetchData(id)
+
+    state = {
+        body: '',
+        author: ''
+    }
+
+    createComment = ( ) => {
+        const { body, author } = this.state
+        this.props.addComment({ body , author}, this.props.match.params.id)
     }
 
     render() {
@@ -35,6 +40,19 @@ class PostDetail extends Component {
                             <div className="row"></div>
                             <h5>Comentários | {comments.length}</h5>
                             <div className="row divider"></div>
+
+                            <div className="row">
+                                <div className="col s6">
+                                    <input type="text" placeholder="Comentário" onChange={(event) => this.setState({ body: event.target.value })}></input>
+                                </div>
+                                <div className="col s6">
+                                    <input type="text" placeholder="Autor" onChange={(event) => this.setState({ author: event.target.value })}></input>
+                                </div>
+                                <div className="col s6">
+                                    <button className="btn" onClick={this.createComment}>Adicionar</button>
+                                </div>
+                            </div>
+
                             <Collapsible>
                                 {comments.map(comment =>
                                     <CollapsibleItem key={comment.id} header={comment.author} icon='face'>
@@ -45,6 +63,7 @@ class PostDetail extends Component {
                                         <div className="row">
                                             <div className="col s12">{comment.body}</div>
                                         </div>
+
                                     </CollapsibleItem>
                                 )}</Collapsible>
 
@@ -60,9 +79,11 @@ class PostDetail extends Component {
 
 const mapStateToProps = (state, props) => ({
     post: state.posts.find(post => post.id === props.match.params.id),
-    comments: state.comments.filter(comments => !comments.deleted)
+    comments: state.comments.filter(comments => !comments.deleted).filter(comments => comments.parentId === props.match.params.id)
 })
+
 const mapDispatchToProps = (dispatch) => ({
-    fetchData: (url, id) => dispatch(receiveDataComments(url, id)),
+    addComment: (data, id) => dispatch(createComment(data, id))
 })
-export default connect(mapStateToProps, mapDispatchToProps)(PostDetail);
+
+export default connect(mapStateToProps,mapDispatchToProps)(PostDetail);

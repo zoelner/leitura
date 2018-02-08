@@ -13,11 +13,13 @@ import {
 } from './Categories'
 
 import {
-    receiveComments
+    receiveComments,
+    addComment
 } from './Comments';
 
 
 export {
+    addComment,
     receiveComments,
     votePost,
     receiveData,
