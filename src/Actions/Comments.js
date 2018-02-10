@@ -1,4 +1,4 @@
-import { RECEIVE_COMMENTS, ADD_COMMENTS } from "./ActionTypes";
+import { RECEIVE_COMMENTS, ADD_COMMENTS, VOTE_COMMENT, DELETE_COMMENTS } from "./ActionTypes";
 
 export function receiveComments(comments) {
     return {
@@ -14,3 +14,16 @@ export function addComment(comment) {
     }
 }
 
+export function voteComment(comment) {
+    return {
+        type: VOTE_COMMENT,
+        comment
+    }
+}
+
+export function deleteComment(id) {
+    return {
+        type: DELETE_COMMENTS,
+        id
+    }
+}

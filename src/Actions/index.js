@@ -14,12 +14,16 @@ import {
 
 import {
     receiveComments,
-    addComment
+    addComment,
+    voteComment,
+    deleteComment
 } from './Comments';
 
 
 export {
+    voteComment,
     addComment,
+    deleteComment,
     receiveComments,
     votePost,
     receiveData,

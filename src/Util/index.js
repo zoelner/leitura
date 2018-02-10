@@ -1,4 +1,4 @@
-import { receivePosts, receiveCategories, createPosts, votePost, receiveComments, deletePosts, addComment } from "../Actions";
+import { voteComment,receivePosts, receiveCategories, createPosts, votePost, receiveComments, deletePosts, addComment, deleteComment } from "../Actions";
 import uuid from 'uuid'
 
 export function receiveData(url) {
@@ -77,5 +77,25 @@ export function postVote(id, vote) {
         })
         let posts = await response.json()
         return await dispatch(votePost(await posts))
+    }
+}
+
+export function postComment(id, vote) {
+    return async dispatch => {
+        let response = await fetch(`http://localhost:3001/comments/${id}`, {
+            method: "POST", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },
+            body: (vote) ? '{"option":"upVote"}' : '{"option":"downVote"}'
+        })
+        let comment = await response.json()
+        return await dispatch(voteComment(await comment))
+    }
+}
+
+export function removeComment(id) {
+    return async dispatch => {
+        await fetch(`http://localhost:3001/comments/${id}`, {
+            method: "DELETE", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },
+        })
+        dispatch(deleteComment(await id))
     }
 }

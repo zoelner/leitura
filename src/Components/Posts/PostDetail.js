@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import { FooterView } from '../FooterView';
 import { HeaderView } from '../HeaderView';
 import Timestamp from 'react-timestamp';
-import { Collapsible } from 'react-materialize';
+import { Collapsible, Button } from 'react-materialize';
 import CollapsibleItem from 'react-materialize/lib/CollapsibleItem';
-import { createComment } from './../../Util';
+import { createComment, postComment } from './../../Util';
+import { removeComment } from './../../Util/index';
 
 
 class PostDetail extends Component {
@@ -15,9 +16,18 @@ class PostDetail extends Component {
         author: ''
     }
 
-    createComment = ( ) => {
+    createComment = () => {
         const { body, author } = this.state
-        this.props.addComment({ body , author}, this.props.match.params.id)
+        this.props.addComment({ body, author }, this.props.match.params.id)
+    }
+
+    state = {
+        vote: true
+    }
+
+    vote = (id) => {
+        this.props.voteComment(id, this.state.vote)
+        this.setState({ vote: !this.state.vote })
     }
 
     render() {
@@ -58,10 +68,16 @@ class PostDetail extends Component {
                                     <CollapsibleItem key={comment.id} header={comment.author} icon='face'>
                                         <div className="row">
                                             <div className="col s6">Data: <Timestamp time={comment.timestamp / 1000} format='date' /> </div>
-                                            <div className="col s6">Votos: {comment.voteScore}</div>
+                                            <div className="col s6" onClick={() => this.vote(comment.id)}>Votos: {comment.voteScore}</div>
                                         </div>
                                         <div className="row">
                                             <div className="col s12">{comment.body}</div>
+                                        </div>
+                                        <div className="row">
+                                            <Button
+                                                className="red btn pulse modal-close" waves='light'
+                                                onClick={() => this.props.delComment(comment.id)}
+                                            >Apagar</Button>
                                         </div>
 
                                     </CollapsibleItem>
@@ -83,7 +99,10 @@ const mapStateToProps = (state, props) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    addComment: (data, id) => dispatch(createComment(data, id))
+    addComment: (data, id) => dispatch(createComment(data, id)),
+    voteComment: (id, vote) => dispatch(postComment(id, vote)),
+    delComment: (id) => dispatch(removeComment(id))
+
 })
 
-export default connect(mapStateToProps,mapDispatchToProps)(PostDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(PostDetail);
