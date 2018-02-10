@@ -5,8 +5,7 @@ import { HeaderView } from '../HeaderView';
 import Timestamp from 'react-timestamp';
 import { Collapsible, Button } from 'react-materialize';
 import CollapsibleItem from 'react-materialize/lib/CollapsibleItem';
-import { createComment, postComment } from './../../Util';
-import { removeComment } from './../../Util/index';
+import { createComment, postComment, receiveData, removeComment, receiveDataComments } from './../../Util';
 
 
 class PostDetail extends Component {
@@ -16,9 +15,16 @@ class PostDetail extends Component {
         author: ''
     }
 
+    componentDidMount = async () => {
+        if(this.props.post === undefined) {
+            await this.props.receiveData(`posts/${this.props.match.params.id}`)
+            await this.props.receiveDataComments(this.props.match.params.id)
+        }
+    }
+
     createComment = () => {
         const { body, author } = this.state
-        this.props.addComment({ body, author }, this.props.match.params.id)
+        this.props.createComment({ body, author }, this.props.match.params.id)
     }
 
     state = {
@@ -26,15 +32,17 @@ class PostDetail extends Component {
     }
 
     vote = (id) => {
-        this.props.voteComment(id, this.state.vote)
+        this.props.postComment(id, this.state.vote)
         this.setState({ vote: !this.state.vote })
     }
 
     render() {
         const { post, comments } = this.props;
+        if (!this.props.post) { return <div>Loading...</div>}
         return (
-            <div>
+           <div>
                 <HeaderView />
+
                 <div className="section no-pad-bot">
                     <div className="container">
                         <div className="section">
@@ -76,7 +84,7 @@ class PostDetail extends Component {
                                         <div className="row">
                                             <Button
                                                 className="red btn pulse modal-close" waves='light'
-                                                onClick={() => this.props.delComment(comment.id)}
+                                                onClick={() => this.props.removeComment(comment.id)}
                                             >Apagar</Button>
                                         </div>
 
@@ -94,15 +102,10 @@ class PostDetail extends Component {
 }
 
 const mapStateToProps = (state, props) => ({
-    post: state.posts.find(post => post.id === props.match.params.id),
+    post:  (state.posts instanceof Array) ? state.posts.find(post => post.id === props.match.params.id) :state.posts ,
     comments: state.comments.filter(comments => !comments.deleted).filter(comments => comments.parentId === props.match.params.id)
 })
 
-const mapDispatchToProps = (dispatch) => ({
-    addComment: (data, id) => dispatch(createComment(data, id)),
-    voteComment: (id, vote) => dispatch(postComment(id, vote)),
-    delComment: (id) => dispatch(removeComment(id))
-
-})
+const mapDispatchToProps = { createComment, postComment, removeComment, receiveData, receiveDataComments }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostDetail);

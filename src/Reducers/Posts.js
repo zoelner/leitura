@@ -5,7 +5,8 @@ export function posts(state = [], action) {
 
     switch (action.type) {
         case RECEIVE_POSTS:
-            return action.posts.sort(sortBy('-voteScore'))
+            return action.posts
+
         case DELETE_POSTS:
             return state.map(post => (post.id === action.id) ? { ...post, deleted: 'true' } : post)
         case CREATE_POSTS:

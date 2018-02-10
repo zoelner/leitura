@@ -11,13 +11,13 @@ import { receiveData, postVote, receiveDataComments } from './../Util';
 class Home extends Component {
 
     async componentDidMount() {
-        const { fetchData } = this.props;
-        await fetchData('posts')
-        await fetchData('categories')
+        const { receiveData } = this.props;
+        await receiveData('posts')
+        await receiveData('categories')
     }
 
     render() {
-        const { categories, sortPost, posts, match, votePost, receiveComments, comments } = this.props;
+        const { categories, orderPost, posts, match, postVote, receiveDataComments, comments } = this.props;
         return (
             <div>
                 <HeaderView />
@@ -41,7 +41,7 @@ class Home extends Component {
 
                         <div className="row">
                             <div className="col s12 m6">
-                                <Input type='select' defaultValue='voteScore' label='Ordenar por:' onChange={(event) => sortPost(event.target.value)}>
+                                <Input type='select' defaultValue='voteScore' label='Ordenar por:' onChange={(event) => orderPost(event.target.value)}>
                                     <option value='voteScore'>Vote Score</option>
                                     <option value='timestamp'>Data de Criação</option>
                                     <option value='title'>Título</option>
@@ -64,11 +64,11 @@ class Home extends Component {
                                     <Posts s={6} m={6}
                                         post={post}
                                         key={index}
-                                        vote={votePost}
-                                        receiveComments={receiveComments}
+                                        vote={postVote}
+                                        receiveComments={receiveDataComments}
                                         comments={comments.filter(comment => comment.parentId === post.id)}
-                                        />
-                                        ))}
+                                    />
+                                ))}
                         </div>
                     </div>
                 </div>
@@ -84,11 +84,6 @@ const mapStateToProps = state => ({
     comments: state.comments
 })
 
-const mapDispatchToProps = dispatch => ({
-    sortPost: (sort) => dispatch(orderPost(sort)),
-    fetchData: (url) => dispatch(receiveData(url)),
-    votePost: (id, vote) => dispatch(postVote(id, vote)),
-    receiveComments: (id) => dispatch(receiveDataComments(id))
-})
+const mapDispatchToProps = { orderPost, receiveData, postVote, receiveDataComments }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
