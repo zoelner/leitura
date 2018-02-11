@@ -1,7 +1,6 @@
 
 import {
     votePost,
-    receiveData,
     deletePosts,
     receivePosts,
     createPosts,
@@ -15,6 +14,7 @@ import {
 import {
     receiveComments,
     addComment,
+    editComment,
     voteComment,
     deleteComment
 } from './Comments';
@@ -26,7 +26,7 @@ export {
     deleteComment,
     receiveComments,
     votePost,
-    receiveData,
+    editComment,
     deletePosts,
     receivePosts,
     createPosts,

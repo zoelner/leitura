@@ -1,9 +1,19 @@
-import { voteComment, receivePosts, receiveCategories, createPosts, votePost, receiveComments, deletePosts, addComment, deleteComment } from "../Actions";
+import {
+    receivePosts,
+    receiveCategories,
+    createPosts,
+    votePost,
+    receiveComments,
+    deletePosts,
+    addComment,
+    voteComment,
+    editComment,
+    deleteComment } from "../Actions";
 import uuid from 'uuid'
 
 export function receiveData(url) {
     return async (dispatch) => {
-        const data = await fetch(`http://192.168.0.12:3001/${url}`, { headers: { 'Authorization': 'Zoelner' } })
+        const data = await fetch(`http://localhost:3001/${url}`, { headers: { 'Authorization': 'Zoelner' } })
         const response = await data.json();
         if (url.match('posts'))
             return dispatch(receivePosts(response))
@@ -15,7 +25,7 @@ export function receiveData(url) {
 
 export function receiveDataComments(id) {
     return async (dispatch) => {
-        const data = await fetch(`http://192.168.0.12:3001/posts/${id}/comments`, { headers: { 'Authorization': 'Zoelner' } })
+        const data = await fetch(`http://localhost:3001/posts/${id}/comments`, { headers: { 'Authorization': 'Zoelner' } })
         const response = await data.json();
 
         return dispatch(receiveComments(response))
@@ -25,7 +35,7 @@ export function receiveDataComments(id) {
 
 export function createComment(data, parentId) {
     return async dispatch => {
-        let response = await fetch(`http://192.168.0.12:3001/comments`, {
+        let response = await fetch(`http://localhost:3001/comments`, {
             method: "POST", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },
             body: JSON.stringify(Object.assign({}, { parentId }, data, { id: uuid(), timestamp: Date.now() }))
         })
@@ -37,7 +47,7 @@ export function createComment(data, parentId) {
 
 export function postData(data) {
     return async dispatch => {
-        let response = await fetch(`http://192.168.0.12:3001/posts`, {
+        let response = await fetch(`http://localhost:3001/posts`, {
             method: "POST", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },
             body: JSON.stringify(Object.assign({}, data, { id: uuid(), timestamp: Date.now() }))
         })
@@ -48,7 +58,7 @@ export function postData(data) {
 
 export function updatePost(data, id) {
     return async dispatch => {
-        await fetch(`http://192.168.0.12:3001/posts/${id}`, {
+        await fetch(`http://localhost:3001/posts/${id}`, {
             method: "PUT", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },
             body: JSON.stringify(data)
         })
@@ -57,7 +67,7 @@ export function updatePost(data, id) {
 
 export function removePost(id) {
     return async dispatch => {
-        await fetch(`http://192.168.0.12:3001/posts/${id}`, {
+        await fetch(`http://localhost:3001/posts/${id}`, {
             method: "DELETE", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },
         })
         dispatch(deletePosts(await id))
@@ -67,7 +77,7 @@ export function removePost(id) {
 
 export function postVote(id, vote) {
     return async dispatch => {
-        let response = await fetch(`http://192.168.0.12:3001/posts/${id}`, {
+        let response = await fetch(`http://localhost:3001/posts/${id}`, {
             method: "POST", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },
             body: (vote) ? '{"option":"upVote"}' : '{"option":"downVote"}'
         })
@@ -78,7 +88,7 @@ export function postVote(id, vote) {
 
 export function postComment(id, vote) {
     return async dispatch => {
-        let response = await fetch(`http://192.168.0.12:3001/comments/${id}`, {
+        let response = await fetch(`http://localhost:3001/comments/${id}`, {
             method: "POST", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },
             body: (vote) ? '{"option":"upVote"}' : '{"option":"downVote"}'
         })
@@ -89,9 +99,20 @@ export function postComment(id, vote) {
 
 export function removeComment(id) {
     return async dispatch => {
-        await fetch(`http://192.168.0.12:3001/comments/${id}`, {
+        await fetch(`http://localhost:3001/comments/${id}`, {
             method: "DELETE", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },
         })
         dispatch(deleteComment(await id))
+    }
+}
+
+export function updateComment(data, id) {
+    return async dispatch => {
+        let response = await fetch(`http://localhost:3001/comments/${id}`, {
+            method: "PUT", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': 'Zoelner' },
+            body: JSON.stringify(data)
+        })
+        let comment = await response.json()
+        return await dispatch(editComment(await comment))
     }
 }
