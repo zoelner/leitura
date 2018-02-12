@@ -5,8 +5,8 @@ import { HeaderView } from '../HeaderView';
 import Timestamp from 'react-timestamp';
 import { Collapsible, Button } from 'react-materialize';
 import CollapsibleItem from 'react-materialize/lib/CollapsibleItem';
-import { createComment, postComment, receiveData, removeComment, receiveDataComments, updateComment } from './../../Util';
-
+import { createComment, postComment, receiveData, removeComment, receiveDataComments, updateComment, postVote } from './../../Util';
+import sortBy from 'sort-by'
 
 class PostDetail extends Component {
 
@@ -16,13 +16,16 @@ class PostDetail extends Component {
         commentAuthor: '',
         commentEdit: false,
         vote: true,
+        post: true,
     }
 
     componentDidMount = async () => {
-        if(this.props.post === undefined) {
+        if(!this.props.post) {
             await this.props.receiveData(`posts/${this.props.match.params.id}`)
             await this.props.receiveDataComments(this.props.match.params.id)
         }
+
+
     }
 
     editComment = (id) => {
@@ -42,23 +45,32 @@ class PostDetail extends Component {
         this.setState({ vote: !this.state.vote })
     }
 
+    votePost = (id) => {
+        this.props.postVote(id, this.state.vote)
+        this.setState({ vote: !this.state.vote })
+    }
+
     render() {
         const { post, comments } = this.props;
         if (!this.props.post) { return <div>Loading...</div>}
-        // if(this.props.post) { return <div>Error</div>}
+
+
+        if(Object.keys(this.props.post).length <= 0 ){
+            alert('Post não encontrado')
+            return <div> Post não encontrado </div>
+        }
         return <div>
             <HeaderView/>
-            {this.state.commentAuthor}
-            {this.state.commentBody}
             <div className="section no-pad-bot">
                 <div className="container">
                     <div className="section">
                         <h5>{post.title}</h5>
                         <div className="row divider"></div>
                         <div className="row">
-                            <h6 className="col m6">Autor: {post.author}</h6>
-                            <h6 className="col m6">Data de Criação: <Timestamp time={post.timestamp / 1000}
+                            <h6 className="col m4">Autor: {post.author}</h6>
+                            <h6 className="col m4">Data de Criação: <Timestamp time={post.timestamp / 1000}
                                                                                format='date'/></h6>
+                            <h6 className="col m4" onClick={() => this.votePost(post.id)} >Votos: {post.voteScore}</h6>
                         </div>
                         <div className="row">
                             {post.body} <br/>
@@ -82,7 +94,7 @@ class PostDetail extends Component {
                         </div>
 
                         <Collapsible>
-                            {comments.map(comment =>
+                            {comments.sort(sortBy('-voteScore')).map(comment =>
                                 <CollapsibleItem key={comment.id} header={comment.author} icon='face'>
                                     <div className="row">
                                         <div className="col s6">Data: <Timestamp time={comment.timestamp / 1000}
@@ -139,6 +151,6 @@ const mapStateToProps = (state, props) => ({
     comments: state.comments.filter(comments => !comments.deleted).filter(comments => comments.parentId === props.match.params.id)
 })
 
-const mapDispatchToProps = { createComment, postComment, removeComment, receiveData, receiveDataComments, updateComment }
+const mapDispatchToProps = { createComment, postComment, removeComment, receiveData, receiveDataComments, updateComment, postVote }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostDetail);

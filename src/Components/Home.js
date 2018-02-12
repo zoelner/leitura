@@ -41,8 +41,8 @@ class Home extends Component {
 
                         <div className="row">
                             <div className="col s12 m6">
-                                <Input type='select' defaultValue='voteScore' label='Ordenar por:' onChange={(event) => orderPost(event.target.value)}>
-                                    <option value='voteScore'>Vote Score</option>
+                                <Input type='select' defaultValue='-voteScore' label='Ordenar por:' onChange={(event) => orderPost(event.target.value)}>
+                                    <option value='-voteScore'>Vote Score</option>
                                     <option value='timestamp'>Data de Criação</option>
                                     <option value='title'>Título</option>
                                 </Input>
@@ -53,7 +53,7 @@ class Home extends Component {
 
                         </div>
                         <div className="row">
-                            {posts
+                            { posts
                                 .filter(post => !post.deleted)
                                 .filter(post => {
                                     if (match.params.name) {
@@ -80,7 +80,7 @@ class Home extends Component {
 
 const mapStateToProps = state => ({
     categories: state.categories,
-    posts: state.posts,
+    posts: (state.posts),
     comments: state.comments
 })
 
