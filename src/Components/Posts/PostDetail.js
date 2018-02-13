@@ -7,7 +7,7 @@ import { Collapsible, Button } from 'react-materialize';
 import CollapsibleItem from 'react-materialize/lib/CollapsibleItem';
 import { createComment, postComment, receiveData, removeComment, receiveDataComments, updateComment, postVote } from './../../Util';
 import sortBy from 'sort-by'
-
+import { Link } from 'react-router-dom'
 class PostDetail extends Component {
 
     state = {
@@ -15,17 +15,15 @@ class PostDetail extends Component {
         commentBody: '',
         commentAuthor: '',
         commentEdit: false,
-        vote: true,
-        post: true,
+        voteComment: true,
+        votePost: true,
     }
 
     componentDidMount = async () => {
         if(!this.props.post) {
-            await this.props.receiveData(`posts/${this.props.match.params.id}`)
+            await this.props.receiveData(`posts`)
             await this.props.receiveDataComments(this.props.match.params.id)
         }
-
-
     }
 
     editComment = (id) => {
@@ -40,25 +38,27 @@ class PostDetail extends Component {
         this.props.createComment({ body, author }, this.props.match.params.id)
     }
 
-    vote = (id) => {
-        this.props.postComment(id, this.state.vote)
-        this.setState({ vote: !this.state.vote })
+    voteComment = (id) => {
+        this.props.postComment(id, this.state.voteComment)
+        this.setState({ voteComment: !this.state.voteComment })
     }
 
     votePost = (id) => {
-        this.props.postVote(id, this.state.vote)
-        this.setState({ vote: !this.state.vote })
+        this.props.postVote(id, this.state.votePost)
+        this.setState({ votePost: !this.state.votePost })
     }
 
     render() {
         const { post, comments } = this.props;
-        if (!this.props.post) { return <div>Loading...</div>}
-
-
-        if(Object.keys(this.props.post).length <= 0 ){
-            alert('Post não encontrado')
-            return <div> Post não encontrado </div>
+        if (!this.props.post) { 
+            this.timer = setTimeout(() => {
+                this.props.history.push("/")
+                alert('Post Apagado, redirecionando!')
+            }, 5000);
+            return <div>Loading...</div>
+            
         }
+            clearTimeout(this.timer)
         return <div>
             <HeaderView/>
             <div className="section no-pad-bot">
@@ -70,10 +70,14 @@ class PostDetail extends Component {
                             <h6 className="col m4">Autor: {post.author}</h6>
                             <h6 className="col m4">Data de Criação: <Timestamp time={post.timestamp / 1000}
                                                                                format='date'/></h6>
-                            <h6 className="col m4" onClick={() => this.votePost(post.id)} >Votos: {post.voteScore}</h6>
+                            <h6 className="col m4"><i className="material-icons" onClick={() => this.votePost(post.id)}>{(this.state.votePost) ? 'favorite_border' : 'favorite'}</i>{post.voteScore}</h6>
                         </div>
                         <div className="row">
                             {post.body} <br/>
+                        </div>
+                        <div className="row">
+                        <Link to={`/post/edit/${post.id}`} className="btn waves-effect waves-light  orange"><i className="material-icons right">mode_edit</i>Editar</Link>
+
                         </div>
                         <div className="row"></div>
                         <h5>Comentários | {comments.length}</h5>
@@ -89,19 +93,18 @@ class PostDetail extends Component {
                                        onChange={(event) => this.setState({commentAuthor: event.target.value})}></input>
                             </div>
                             <div className="col s6">
-                                <button className="btn" onClick={this.createComment}>Adicionar</button>
+                                <button className="btn" onClick={this.createComment} >Adicionar</button>
                             </div>
                         </div>
 
                         <Collapsible>
-                            {comments.sort(sortBy('-voteScore')).map(comment =>
+                            {comments.sort(sortBy('-timestamp')).map(comment =>
                                 <CollapsibleItem key={comment.id} header={comment.author} icon='face'>
                                     <div className="row">
                                         <div className="col s6">Data: <Timestamp time={comment.timestamp / 1000}
                                                                                  format='date'/>
                                         </div>
-                                        <div className="col s6"
-                                             onClick={() => this.vote(comment.id)}>Votos: {comment.voteScore}</div>
+                                        <div className="col s6"><i className="material-icons"  onClick={() => this.voteComment(comment.id)}>{(this.state.voteComment) ? 'favorite_border' : 'favorite'}</i> {comment.voteScore}</div>
                                     </div>
                                     <div className="row">
                                         <div className="col s12">{comment.body}</div>
@@ -147,7 +150,7 @@ class PostDetail extends Component {
 }
 
 const mapStateToProps = (state, props) => ({
-    post:  (state.posts instanceof Array) ? state.posts.find(post => post.id === props.match.params.id) :state.posts ,
+    post:  state.posts.find(post => post.id === props.match.params.id),
     comments: state.comments.filter(comments => !comments.deleted).filter(comments => comments.parentId === props.match.params.id)
 })
 
